@@ -10,13 +10,23 @@ spec:
       app: nginx
   template:
     metadata:
-      namespace: dev
       labels:
         app: nginx
     spec:
       containers:
         - name: nginx
-          image: nginx:1.27.0-bookworm-otel
+          image: nginx:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+          env:
+            - name: LB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: nginx-config
+                  key: lb-server
+            - name: MY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nginx-secret
+                  key: my-secret
